@@ -21,4 +21,4 @@ If you remember "The Zen of Python, by Tim Peters", the third rule is "Simple is
 Very interesting, but there are several grammar mistakes on your text!
 ----------------------------------------------------------------------
 
-Okay, this is how the things work here: I help you with the blog issues and you help me with English, okay? (free French and Dutch lessons also appreciated)
+Okay, this is how the things works here: I help you with the blog issues and you help me with English, okay? (free French and Dutch lessons also appreciated)
