@@ -7,6 +7,10 @@ from statics import path
 from exceptions import *
 
 
+def create_blog(path):
+    create_blog_structure(path,{'blog_name':'Ficticional Blog','user_name':'Alan Turing'})
+
+
 def create_blog_structure(blog_path,blog_config):
 
     """ Initial blog structure:
