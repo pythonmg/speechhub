@@ -197,9 +197,9 @@ def create_page(config,page_number):
 
     template = open(path.INDEX_TEMPLATE).read()
     
-    with open(os.path.join(config['path'],'pages%spage%s.html' % (FOLDER_SEPARATOR,page_number)),'w') as page:
+    with codecs.open(os.path.join(config['path'],'pages%spage%s.html' % (FOLDER_SEPARATOR,page_number)),'w',encoding='utf-8') as page:
         content = pystache.render(template,page_content)
-        page.write(content)            
+        page.write(unicode(content))
 
 
 def rebuild_blog():
