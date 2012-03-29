@@ -3,7 +3,7 @@ import os
 import sys
 import argparse
 
-from functions import create_blog, new_post, manage
+from functions import create_blog, new_post, manage, admin
 
 USAGE = """Usage:
 speechhub <command> [arg,[...]]
@@ -34,10 +34,15 @@ def admin_blog(args):
     parser.add_argument('--datetime-format', metavar='posts-per-page.',
                                              type=int,
                                              nargs=1,
-                                             default='%D/%M/%A - %h%m%s',
+                                             # default='%D/%M/%A - %h%m%s',
                                              help='Date and time format. Use capitalized for date and not capitalized for time.')
+    parser.add_argument('--update-path', metavar='posts-per-page.',
+                                             type=str,
+                                             nargs=1,
+                                             help='update the project path.')
 
     parsed_args = parser.parse_args(args)
+    admin(vars(parsed_args))
     
 
 def create_new_blog(args):

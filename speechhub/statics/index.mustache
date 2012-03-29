@@ -5,9 +5,9 @@
   <body>
     
     <div id="top">
-      <span class="blog-title">
+      <h1 class="blog-title">
         {{blog_name}}
-      </span>
+      </h1>
       <span class="blog-description">
         {{blog_description}}
       </span>
@@ -16,7 +16,7 @@
     <div id="posts">
       {{#posts}}
         <div class="post">
-          <h>{{title}}</h>
+          <h2>{{title}}</h2>
           <span class="author">
             {{author}}
           </span>
@@ -24,7 +24,7 @@
             {{date}}
           </span> 
           <span class="post-body">
-            {{post}}
+            {{{post}}}
           </span>
         </div>
       {{/posts}}

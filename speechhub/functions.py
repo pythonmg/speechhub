@@ -57,10 +57,10 @@ def create_empty_index(blog_path,config_struct):
 def get_initial_config_file(args):
     config_struct = json.load(open(path.INITIAL_CONFIG_FILE))
     config_struct['path'] = args['path']
-    config_struct['url'] = args['blog_url']
-    config_struct['blog_name'] = args['blog_name']
-    config_struct['username'] = args['username']
-    config_struct['email'] = args['email']
+    config_struct['url'] = args['blog_url'][0] if args['blog_url'] else None
+    config_struct['blog_name'] = args['blog_name'][0] if args['blog_name'] else None
+    config_struct['username'] = args['username'][0] if args['username'] else None
+    config_struct['email'] = args['email'][0] if args['email'] else None
     return config_struct
 
 
@@ -82,7 +82,7 @@ def new_post(args):
         raise DuplicatedPostNameError()
 
     with open(os.path.join(LOCAL_PATH,'posts%s%s.md' % (FOLDER_SEPARATOR,post_file_name)),'w') as post_file:
-        post_file.write("""%s\n================""" % post_title)
+        post_file.write("Fill it!")
 
     with open(os.path.join(LOCAL_PATH,'posts%s%s.meta.json' % (FOLDER_SEPARATOR,post_file_name)),'w') as post_meta:
         meta = {"date":time.asctime(),
@@ -117,7 +117,7 @@ def get_posts_for_page(posts_folder,page=1,posts_per_page=5):
     meta_posts = [os.path.join(posts_folder,f) for f in os.listdir(posts_folder) if f.endswith('.meta.json')]
     meta_posts = [(json.load(open(f))['date'],json.load(open(f))['post_file_name']) for f in meta_posts if json.load(open(f))['published']]
 
-    meta_posts.sort(key=lambda f : time.strptime(f[0]))
+    meta_posts.sort(key=lambda f : time.strptime(f[0]),reverse=True)
 
     return [f[1] for f in meta_posts[(page-1)*posts_per_page:page*posts_per_page]]
 
@@ -180,10 +180,30 @@ def get_config():
     return config
 
 
-def manage(args):
+def update_config(config):
+    LOCAL_PATH = os.getcwd()
+    config_file_path = os.path.join(LOCAL_PATH,'config%sconfig.json' % FOLDER_SEPARATOR)
 
+    if not os.path.exists(config_file_path):
+        raise NotASpeechhubProjectFolderErro()
+
+    json.dump(config,open(config_file_path,'w'))
+
+
+def manage(args):
     if args['publish_post']:
         publish_post(args['publish_post'][0])
+
+
+def admin(args):
+    if args['update_path']:
+        update_path(args['update_path'][0])
+
+
+def update_path(path):
+    config = get_config()
+    config['path'] = os.path.abspath(os.path.expanduser(path))
+    update_config(config)
 
 
 def slugify(text, delim=u'-'):
