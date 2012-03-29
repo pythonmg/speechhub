@@ -6,40 +6,25 @@ Basic Usage
 
 Create a new blog:
 
-'speechhub --new-blog <blogname> [path]'
+'speechhub create-blog --blog-name=<blogname> [path]'
 
 Create a new post:
 
-'speechhub --new-post <postname>'
+'speechhub new-post --title=<post-title>'
 
 publish a post:
 
-'speechhub --publish-post <post-path>'
+'speechhub manage --publish-post <post-path>'
 
-unpublish a post:
+unpublish a post [not yet implemented]:
 
 'speechhub --unpublish-post <post-path>'
 
-[Re]Build a post:
-
-'speechhub --build-post <post-path>'
-
 Rebuild complete blog:
 
-'speechhub --rebuild [blog-path]'
+'speechhub rebuild'
 
-List all posts by date:
+List all posts by date [not yet implemented]:
 
 'speechhub --list-posts'
 
-
-User Preferences
-----------------
-
-Set the username:
-
-'speechhub --user-name <username>'
-
-Set the user E-mail:
-
-'speechhub --user-email <user-email>'
