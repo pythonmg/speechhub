@@ -2,3 +2,4 @@ env
 *.pyc
 *~
 SpeechHub.egg*
+test_blog

@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
-
+import re
 import os
-import shutil
+import sys
+import time
 import json
+import shutil
 
 import pystache
+from markdown import markdown
 
 from statics import path
-from exceptions import *
+from exc import DuplicatedPostNameError, NotASpeechhubProjectFolderErro, PostNotFoundError
+
+_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+FOLDER_SEPARATOR = os.sep
 
 
 def create_blog(args):
@@ -15,7 +21,6 @@ def create_blog(args):
     args['path'] = path
     config_struct = get_initial_config_file(args)
     create_blog_structure(path,config_struct)
-
 
 
 def create_blog_structure(blog_path,config_struct):
@@ -59,6 +64,128 @@ def get_initial_config_file(args):
     return config_struct
 
 
+def new_post(args):
+    post_title = args['post_title'][0]
+
+    LOCAL_PATH = os.getcwd()
+
+    try:
+        config_file = open(os.path.join(LOCAL_PATH,'config/config.json'))
+    except IOError:
+        sys.stderr.write('You are not inside a SpeechHub project directory.\n')
+        return
+
+    post_file_name = slugify(post_title) + time.strftime("%Y-%b-%d")
+    author = json.load(config_file)['username']
+
+    if os.path.exists(os.path.join(LOCAL_PATH,'posts%s%s.md' % (FOLDER_SEPARATOR,post_file_name))):
+        raise DuplicatedPostNameError()
+
+    with open(os.path.join(LOCAL_PATH,'posts%s%s.md' % (FOLDER_SEPARATOR,post_file_name)),'w') as post_file:
+        post_file.write("""%s\n================""" % post_title)
+
+    with open(os.path.join(LOCAL_PATH,'posts%s%s.meta.json' % (FOLDER_SEPARATOR,post_file_name)),'w') as post_meta:
+        meta = {"date":time.asctime(),
+                "post_title":post_title,
+                "post_file_name":post_file_name + '.md',
+                "post_author":author,
+                "published":False,
+                }
+        json.dump(meta,post_meta)
+
+    print "Post '%s' created. To fill it with something brillant please edit the file '%s'" % (post_title,post_file_name)
+
+
+def parse_post(post_file_name):
+
+    meta_file_name = '.'.join(post_file_name.split('.')[:-1]) + '.meta.json'
+
+    post_content = open(post_file_name).read()
+    meta_content = json.load(open(meta_file_name))
+
+    parsed_post = markdown(post_content)
+
+    return {'date':meta_content['date'],
+            'post':parsed_post,
+            'author':meta_content['post_author'],
+            'title':meta_content['post_title'],
+            }
+
+
+def get_posts_for_page(posts_folder,page=1,posts_per_page=5):
+
+    meta_posts = [os.path.join(posts_folder,f) for f in os.listdir(posts_folder) if f.endswith('.meta.json')]
+    meta_posts = [(json.load(open(f))['date'],json.load(open(f))['post_file_name']) for f in meta_posts if json.load(open(f))['published']]
+
+    meta_posts.sort(key=lambda f : time.strptime(f[0]))
+
+    return [f[1] for f in meta_posts[(page-1)*posts_per_page:page*posts_per_page]]
+
+
+def create_index(config):
+
+    posts_folder = os.path.join(config['path'],'posts')
+    posts_at_index = get_posts_for_page(posts_folder)
+    
+    posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_index]
+
+    page_content = {'posts':posts,
+                    'blog_name':config['blog_name'],
+                    # 'blog_description':config['blog_description'], #TODO!
+                    }
+
+    index_template = open(path.INDEX_TEMPLATE).read()
+    with open(os.path.join(config['path'],'index.html'),'w') as index_file:
+        index_content = pystache.render(index_template,page_content)
+        index_file.write(index_content)
+
+
+def rebuild_blog():
+
+    config = get_config()
+    create_index(config)
+
+
+def publish_post(path):
+
+    config = get_config()
+    full_path = os.path.join(config['path'],path)
+
+    if not os.path.exists(full_path):
+        raise PostNotFoundError()
+
+    if full_path.endswith('.md'):
+        full_path = full_path[:-3] + '.meta.json'
+    elif full_path.endswith('.meta.json'):
+        pass #Dont worry, it is correct that way!
+    else:
+        raise PostNotFoundError()
+
+    meta = json.load(open(full_path))
+    meta['published'] = True
+    json.dump(meta,open(full_path,'w'))
+
+    rebuild_blog()
+
+
+def get_config():
+    LOCAL_PATH = os.getcwd()
+    config_file_path = os.path.join(LOCAL_PATH,'config%sconfig.json' % FOLDER_SEPARATOR)
+
+    if not os.path.exists(config_file_path):
+        raise NotASpeechhubProjectFolderErro()
+
+    config = json.load(open(config_file_path))
+
+    return config
+
+
+def manage(args):
+
+    if args['publish_post']:
+        publish_post(args['publish_post'][0])
+
+
 def slugify(text, delim=u'-'):
     """Generates an slightly worse ASCII-only slug.
     Originally from:
@@ -68,7 +195,8 @@ def slugify(text, delim=u'-'):
     """
     result = []
     for word in _punct_re.split(text.lower()):
-        word = normalize('NFKD', word).encode('ascii', 'ignore')
+        word = word.encode('ascii')
         if word:
             result.append(word)
     return unicode(delim.join(result))
+

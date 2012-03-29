@@ -3,7 +3,7 @@ import os
 import sys
 import argparse
 
-from functions import create_blog
+from functions import create_blog, new_post, manage
 
 USAGE = """Usage:
 speechhub <command> [arg,[...]]
@@ -11,7 +11,7 @@ commands:
 \tcreate-blog
 \tadmin
 \tmanage
-\tcreate-post
+\tnew-post
 \trebuild
         """
 
@@ -71,31 +71,31 @@ def create_new_blog(args):
 def create_new_post(args):
     parser = argparse.ArgumentParser(description='Speechhub is a simple command line static blog engine.')
     parser.add_argument('--post-title', metavar='title',
-                                       type=str, 
+                                       type=str,
+                                       required=True, 
                                        nargs=1,
                                        help='The title of your post.',)
     parsed_args = parser.parse_args(args)
+    new_post(vars(parsed_args))
     
 
 def manage_blog(args):
     parser = argparse.ArgumentParser(description='Manage your posts.')
     parser.add_argument('--publish-post', metavar='path',
                                        type=str, 
-                                       nargs='?',
-                                       help='Publish the related post.',)
-    parser.add_argument('--publish-post', metavar='path',
-                                       type=str, 
-                                       nargs='?',
+                                       nargs=1,
                                        help='Publish the related post.',)
     parser.add_argument('--unpublish-post', metavar='path',
                                        type=str, 
-                                       nargs='?',
+                                       nargs=1,
                                        help='Unblish the related post.',)
     parser.add_argument('--delete-post', metavar='path',
                                        type=str, 
-                                       nargs='?',
+                                       nargs=1,
                                        help='Delete the related post.',)
     parsed_args = parser.parse_args(args)
+
+    manage(vars(parsed_args))
     
 
 def rebuild_blog():
