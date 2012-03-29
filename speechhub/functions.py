@@ -112,24 +112,19 @@ def parse_post(post_file_name):
             }
 
 
-def get_posts_for_page(posts_folder,page=1,posts_per_page=5):
+def get_posts_for_page(published_posts,page=1,posts_per_page=5):
 
-    meta_posts = [os.path.join(posts_folder,f) for f in os.listdir(posts_folder) if f.endswith('.meta.json')]
-    meta_posts = [(json.load(open(f))['date'],json.load(open(f))['post_file_name']) for f in meta_posts if json.load(open(f))['published']]
-
-    meta_posts.sort(key=lambda f : time.strptime(f[0]),reverse=True)
-
-    return [f[1] for f in meta_posts[(page-1)*posts_per_page:page*posts_per_page]]
+    return [f[1] for f in published_posts[(page-1)*posts_per_page:page*posts_per_page]]
 
 
 def create_index(config):
 
     posts_folder = os.path.join(config['path'],'posts')
-    posts_at_index = get_posts_for_page(posts_folder,posts_per_page=config['posts_per_page'])
+    posts_at_index = get_posts_for_page(config['published_posts'],posts_per_page=config['posts_per_page'])
     
     posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_index]
 
-    paginator = create_paginator(0)
+    paginator = create_paginator(0,len(config['published_posts']),config['posts_per_page'])
 
     page_content = {'posts':posts,
                     'blog_name':config['blog_name'],
@@ -143,10 +138,12 @@ def create_index(config):
         index_file.write(index_content)
 
 
-def create_paginator(page):
+def create_paginator(page,number_of_posts,posts_per_page):
+
+    last_page = number_of_posts / posts_per_page + 1
     
     numbers = filter(lambda n : n >= 1, range(page-5,page+6))
-    content = {'pages':[{'number':n,'link':'page/page%s.html' % n} for n in numbers if n > 1]}
+    content = {'pages':[{'number':n,'link':'page/page%s.html' % n} for n in numbers if n > 1 and n <= last_page]}
 
     if 1 in numbers:
         content['pages'].insert(0,{'number':1,'link':'/blog'})
@@ -157,10 +154,30 @@ def create_paginator(page):
     return paginator
 
 
+def get_published_posts(posts_path):
+
+    published_posts = []
+    for f in os.listdir(posts_path):
+        if f.endswith('.meta.json'):
+            meta = json.load(open(os.path.join(posts_path,f)))
+            if meta['published']:
+                published_posts.append((meta['date'],meta['post_file_name']))
+    
+    published_posts.sort(key=lambda f : time.strptime(f[0]),reverse=True)
+
+    return published_posts
+
+
 def rebuild_blog():
 
     config = get_config()
+
+    posts_path = os.path.join(config['path'],'posts')
+    published_posts = get_published_posts(posts_path)
+    config['published_posts'] = published_posts
+
     create_index(config)
+    # create_pages(config)
 
 
 def publish_post(path):
