@@ -10,6 +10,7 @@ import codecs
 
 import pystache
 from markdown import markdown
+from unidecode import unidecode
 
 from statics import path
 from exc import DuplicatedPostNameError, NotASpeechhubProjectFolderErro, PostNotFoundError
@@ -67,7 +68,7 @@ def get_initial_config_file(args):
 
 
 def new_post(args):
-    post_title = args['post_title'][0]
+    post_title = args['post_title'][0].decode('utf-8')
 
     LOCAL_PATH = os.getcwd()
 
@@ -95,7 +96,7 @@ def new_post(args):
                 }
         json.dump(meta,post_meta)
 
-    print "Post '%s' created. To fill it with something brillant please edit the file '%s'" % (post_title,post_file_name)
+    print u"Post '%s' created. To fill it with something brillant please edit the file '%s'" % (post_title,post_file_name)
 
 
 def parse_post(post_file_name):
@@ -282,8 +283,6 @@ def slugify(text, delim=u'-'):
     """
     result = []
     for word in _punct_re.split(text.lower()):
-        word = word.encode('ascii')
-        if word:
-            result.append(word)
+        result.extend(unidecode(word).split())
     return unicode(delim.join(result))
 
