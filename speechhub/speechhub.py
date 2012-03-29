@@ -2,6 +2,17 @@ import os
 import sys
 import argparse
 
+USAGE = """Usage:
+speechhub <command> [arg,[...]]
+commands:
+\tcreate-blog
+\tadmin
+\tmanage
+\tcreate-post
+\trebuild
+        """
+
+
 def admin_blog(args):
     parser = argparse.ArgumentParser(description='Speechhub is a simple command line static blog engine.')
     parser.add_argument('--username', metavar='username',
@@ -91,7 +102,7 @@ def rebuild_blog():
 def main():
 
     if len(sys.argv) < 2:
-        print 'usage:'
+        print USAGE
         return
 
     command = sys.argv[1]
@@ -108,7 +119,7 @@ def main():
     elif command == 'rebuild':
         rebuild_blog()
     else:
-        print 'usage:'
+        print USAGE
         return
 
 
