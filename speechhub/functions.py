@@ -143,7 +143,7 @@ def create_paginator(page,number_of_posts,posts_per_page):
     last_page = number_of_posts / posts_per_page + 1
     
     numbers = filter(lambda n : n >= 1, range(page-5,page+6))
-    content = {'pages':[{'number':n,'link':'pages/page%s.html' % n} for n in numbers if n > 1 and n <= last_page]}
+    content = {'pages':[{'number':n,'link':'/pages/page%s.html' % n} for n in numbers if n > 1 and n < last_page]}
 
     if 1 in numbers:
         content['pages'].insert(0,{'number':1,'link':'/blog'})
