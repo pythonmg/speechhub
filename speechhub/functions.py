@@ -143,7 +143,7 @@ def create_paginator(page,number_of_posts,posts_per_page):
     last_page = number_of_posts / posts_per_page + 1
     
     numbers = filter(lambda n : n >= 1, range(page-5,page+6))
-    content = {'pages':[{'number':n,'link':'page/page%s.html' % n} for n in numbers if n > 1 and n <= last_page]}
+    content = {'pages':[{'number':n,'link':'pages/page%s.html' % n} for n in numbers if n > 1 and n <= last_page]}
 
     if 1 in numbers:
         content['pages'].insert(0,{'number':1,'link':'/blog'})
@@ -168,6 +168,36 @@ def get_published_posts(posts_path):
     return published_posts
 
 
+def create_pages(config):
+
+    number_of_pages = len(config['published_posts']) / config['posts_per_page'] + 1
+
+    for n in range(2,number_of_pages+1):
+        create_page(config,n)
+
+
+def create_page(config,page_number):
+
+    posts_folder = os.path.join(config['path'],'posts')
+    posts_at_page = get_posts_for_page(config['published_posts'],posts_per_page=config['posts_per_page'],page=page_number)
+    
+    posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_page]
+
+    paginator = create_paginator(page_number,len(config['published_posts']),config['posts_per_page'])
+
+    page_content = {'posts':posts,
+                    'blog_name':config['blog_name'],
+                    # 'blog_description':config['blog_description'], #TODO!
+                    'paginator':paginator,
+                    }
+
+    template = open(path.INDEX_TEMPLATE).read()
+    
+    with open(os.path.join(config['path'],'pages%spage%s.html' % (FOLDER_SEPARATOR,page_number)),'w') as page:
+        content = pystache.render(template,page_content)
+        page.write(content)            
+
+
 def rebuild_blog():
 
     config = get_config()
@@ -177,7 +207,7 @@ def rebuild_blog():
     config['published_posts'] = published_posts
 
     create_index(config)
-    # create_pages(config)
+    create_pages(config)
 
 
 def publish_post(path):

@@ -3,7 +3,7 @@ import os
 import sys
 import argparse
 
-from functions import create_blog, new_post, manage, admin
+from functions import create_blog, new_post, manage, admin, rebuild_blog
 
 USAGE = """Usage:
 speechhub <command> [arg,[...]]
@@ -101,11 +101,6 @@ def manage_blog(args):
     parsed_args = parser.parse_args(args)
 
     manage(vars(parsed_args))
-    
-
-def rebuild_blog():
-    """ Rebuild the entire blog """
-    pass
 
 
 def main():
