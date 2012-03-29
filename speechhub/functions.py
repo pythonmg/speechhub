@@ -6,6 +6,7 @@ import time
 import math
 import json
 import shutil
+import codecs
 
 import pystache
 from markdown import markdown
@@ -101,9 +102,10 @@ def parse_post(post_file_name):
 
     meta_file_name = '.'.join(post_file_name.split('.')[:-1]) + '.meta.json'
 
-    post_content = open(post_file_name).read()
+    post = codecs.open(post_file_name,'r',encoding='utf-8')#.read()
     meta_content = json.load(open(meta_file_name))
-
+    
+    post_content = unicode(post.read())
     parsed_post = markdown(post_content)
 
     return {'date':meta_content['date'],
@@ -134,9 +136,9 @@ def create_index(config):
                     }
 
     index_template = open(path.INDEX_TEMPLATE).read()
-    with open(os.path.join(config['path'],'index.html'),'w') as index_file:
+    with codecs.open(os.path.join(config['path'],'index.html'),'w',encoding='utf-8') as index_file:
         index_content = pystache.render(index_template,page_content)
-        index_file.write(index_content)
+        index_file.write(unicode(index_content))
 
 
 def create_paginator(page,number_of_posts,posts_per_page):
