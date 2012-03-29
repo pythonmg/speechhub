@@ -3,7 +3,42 @@
     <title>{{blog_name}}</title>
   </head>
   <body>
-    <h1>This is your initial post</h1>
-    Congratulations {{user_name}}, your blog has been created. Enjoy Speechhub!
+    
+    <div id="top">
+      <span class="blog-title">
+        {{blog_name}}
+      </span>
+      <span class="blog-description">
+        {{blog_description}}
+      </span>
+    </div>
+
+    <div id="posts">
+      {{#posts}}
+        <div class="post">
+          <h>{{title}}</h>
+          <span class="author">
+            {{author}}
+          </span>
+          <span class="date">
+            {{date}}
+          </span> 
+          <span class="post-body">
+            {{post}}
+          </span>
+        </div>
+      {{/posts}}
+    </div>
+
+    <div id="sidebar">
+      <div id="about">
+      </div>
+      <div id="old-posts">
+      </div>
+    </div>
+    
+    <div id="pages">
+    </div>
+
   </body>
 </html>
