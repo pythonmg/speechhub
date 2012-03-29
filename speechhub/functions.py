@@ -7,7 +7,8 @@ from statics import path
 from exceptions import *
 
 
-def create_blog(path):
+def create_blog(path,args):
+
     create_blog_structure(path,{'blog_name':'Ficticional Blog','user_name':'Alan Turing'})
 
 
@@ -22,13 +23,11 @@ def create_blog_structure(blog_path,blog_config):
         └── static
             └── css
     """
-    slugfied_blog_name = blog_config['slugfied_blog_name']
-    os.makedirs(os.path.join(blog_path,slugfied_blog_name))
-    os.makedirs(os.path.join(blog_path,os.path.join(slugfied_blog_name,'posts')))
-    os.makedirs(os.path.join(blog_path,os.path.join(slugfied_blog_name,'static')))
-    os.makedirs(os.path.join(blog_path,os.path.join(slugfied_blog_name,os.path.join('statc','css'))))
-    os.makedirs(os.path.join(blog_path,os.path.join(slugfied_blog_name,'pages')))
-    os.makedirs(os.path.join(blog_path,os.path.join(slugfied_blog_name,'config')))
+    os.makedirs(os.path.join(blog_path,'posts'))
+    os.makedirs(os.path.join(blog_path,'static'))
+    os.makedirs(os.path.join(blog_path,os.path.join('static','css')))
+    os.makedirs(os.path.join(blog_path,'pages'))
+    os.makedirs(os.path.join(blog_path,'config'))
 
     create_empty_index(blog_path,blog_config)
 
