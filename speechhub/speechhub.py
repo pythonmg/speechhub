@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import argparse
+
+from functions import create_blog
 
 USAGE = """Usage:
 speechhub <command> [arg,[...]]
@@ -39,18 +42,19 @@ def admin_blog(args):
 
 def create_new_blog(args):
     parser = argparse.ArgumentParser(description='Speechhub is a simple command line static blog engine.')
-    parser.add_argument('--blog-name', metavar='username',
+    parser.add_argument('--blog-name', metavar='blog-name',
                                        type=str, 
                                        nargs=1,
+                                       required=True,
                                        help='Blog name.')
-    parser.add_argument('--path', metavar='username',
-                                       type=str, 
-                                       nargs=1,
-                                       help='Blog name.',)
-    parser.add_argument('--blog-url', metavar='username',
+    parser.add_argument('--path', metavar='path',
                                        type=str, 
                                        nargs='?',
-                                       help='User name.',)
+                                       help='Location where the blog will be created.',)
+    parser.add_argument('--blog-url', metavar='blog-url',
+                                       type=str, 
+                                       nargs='?',
+                                       help='The URL of your blog.',)
     parser.add_argument('--username', metavar='username',
                                        type=str, 
                                        nargs='?',
@@ -61,7 +65,7 @@ def create_new_blog(args):
                                        help='User E-mail')
     
     parsed_args = parser.parse_args(args)
-    print parsed_args
+    create_blog(vars(parsed_args))
 
 
 def create_new_post(args):
