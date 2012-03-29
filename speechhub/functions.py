@@ -125,19 +125,36 @@ def get_posts_for_page(posts_folder,page=1,posts_per_page=5):
 def create_index(config):
 
     posts_folder = os.path.join(config['path'],'posts')
-    posts_at_index = get_posts_for_page(posts_folder)
+    posts_at_index = get_posts_for_page(posts_folder,posts_per_page=config['posts_per_page'])
     
     posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_index]
+
+    paginator = create_paginator(0)
 
     page_content = {'posts':posts,
                     'blog_name':config['blog_name'],
                     # 'blog_description':config['blog_description'], #TODO!
+                    'paginator':paginator,
                     }
 
     index_template = open(path.INDEX_TEMPLATE).read()
     with open(os.path.join(config['path'],'index.html'),'w') as index_file:
         index_content = pystache.render(index_template,page_content)
         index_file.write(index_content)
+
+
+def create_paginator(page):
+    
+    numbers = filter(lambda n : n >= 1, range(page-5,page+6))
+    content = {'pages':[{'number':n,'link':'page/page%s.html' % n} for n in numbers if n > 1]}
+
+    if 1 in numbers:
+        content['pages'].insert(0,{'number':1,'link':'/blog'})
+        
+    paginator_template = open(path.PAGINATOR_TEMPLATE).read()
+    paginator = pystache.render(paginator_template,content)
+
+    return paginator
 
 
 def rebuild_blog():
