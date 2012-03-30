@@ -33,3 +33,5 @@ td, th       { border: 1px solid black; padding: 4px 10px;
 th           { background: #eee; font-weight: normal; }
 
 td input     { border: none; padding: 0; }
+
+img { max-width:640px; }
