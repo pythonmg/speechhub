@@ -62,7 +62,7 @@ img { max-width:640px; }
 }
 #posts h1 { 
     margin: 0 0 10px 0;
-    padding: 100px 0px 0px, 0px;
+    padding-top: 60px;
 }
 #posts h2 {
     font-size: 22px;
@@ -102,4 +102,25 @@ img { max-width:640px; }
 
 .postbody {
     padding: 20px 0px 100px 0px;
+}
+
+#footer {
+    float: bottom;
+    background-color: #333333;
+    border-top: 1px solid #999999;
+    color: #EEEEEE;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    margin: 20px auto 0;
+    padding: 10px 0;
+    text-align: center;
+}
+#footer a {
+    color: #EEEEEE;
+    font-weight: bold;
+    text-decoration: none;
+}
+#footer a:hover {
+    color: #FFFFFF;
+    text-decoration: none;
 }
