@@ -143,7 +143,8 @@ def create_index(config):
                     'url':url,
                     'about_author':config['about_author'],
                     'contacts':config['contacts'],
-                    'links':config['links']
+                    'links':config['links'],
+                    'css_file':config['css_file'],
                     }
 
     index_template = open(path.INDEX_TEMPLATE).read()
@@ -211,7 +212,8 @@ def create_page(config,page_number):
                     'url':url,
                     'about_author':config['about_author'],
                     'contacts':config['contacts'],
-                    'links':config['links']
+                    'links':config['links'],
+                    'css_file':config['css_file'],
                     }
 
     template = open(path.INDEX_TEMPLATE).read()

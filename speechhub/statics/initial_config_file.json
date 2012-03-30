@@ -10,5 +10,6 @@
     "debug":false,
     "contacts":[], 
     "about_author":"",
-    "links":[] 
+    "links":[],
+    "css_file":"basic_style.css"
 }
