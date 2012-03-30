@@ -129,13 +129,18 @@ def create_index(config):
     
     posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_index]
 
-    paginator = create_paginator(0,len(config['published_posts']),config['posts_per_page'],url=config['url'])
+    if config['debug']:
+        url = config['path']
+    else:
+        url = config['url']
+
+    paginator = create_paginator(0,len(config['published_posts']),config['posts_per_page'],url=url)
 
     page_content = {'posts':posts,
                     'blog_name':config['blog_name'],
                     # 'blog_description':config['blog_description'], #TODO!
                     'paginator':paginator,
-                    'url':config['url'],
+                    'url':url,
                     }
 
     index_template = open(path.INDEX_TEMPLATE).read()
@@ -152,7 +157,7 @@ def create_paginator(page,number_of_posts,posts_per_page,url=''):
     content = {'pages':[{'number':n,'link':'%s/pages/page%s.html' % (url,n)} for n in numbers if n > 1 and n <= last_page]}
 
     if 1 in numbers:
-        content['pages'].insert(0,{'number':1,'link':'/blog'})
+        content['pages'].insert(0,{'number':1,'link':'%s/index.html' % url})
         
     paginator_template = open(path.PAGINATOR_TEMPLATE).read()
     paginator = pystache.render(paginator_template,content)
@@ -189,13 +194,18 @@ def create_page(config,page_number):
     
     posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_page]
 
-    paginator = create_paginator(page_number,len(config['published_posts']),config['posts_per_page'],url=config['url'])
+    if config['debug']:
+        url = config['path']
+    else:
+        url = config['url']
+
+    paginator = create_paginator(page_number,len(config['published_posts']),config['posts_per_page'],url=url)
 
     page_content = {'posts':posts,
                     'blog_name':config['blog_name'],
                     # 'blog_description':config['blog_description'], #TODO!
                     'paginator':paginator,
-                    'url':config['url'],
+                    'url':url,
                     }
 
     template = open(path.INDEX_TEMPLATE).read()
@@ -205,7 +215,14 @@ def create_page(config,page_number):
         page.write(unicode(content))
 
 
-def rebuild_blog():
+def rebuild_blog(args):
+
+    if args:
+        if 'debug' in args or '--debug' in args:
+            set_debug(True)
+            print 'Your blog was built on debug mode!'
+    else:
+        set_debug(False)
 
     config = get_config()
 
@@ -271,6 +288,8 @@ def admin(args):
         update_path(args['path'][0])
     if args['url']:
         update_url(args['url'][0])
+    if args['debug']:
+        set_debug(args['debug'][0])
 
 
 def update_url(url):
@@ -282,6 +301,12 @@ def update_url(url):
 def update_path(path):
     config = get_config()
     config['path'] = os.path.abspath(os.path.expanduser(path))
+    update_config(config)
+
+
+def set_debug(_debug):
+    config = get_config()
+    config['debug'] = _debug
     update_config(config)
 
 

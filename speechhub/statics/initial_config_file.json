@@ -6,5 +6,6 @@
     "posts_per_page":5,
     "datetime-format":"%D/%M/%A - %h%m%s",
     "username":"",
-    "email":""
+    "email":"",
+    "debug":false
 }

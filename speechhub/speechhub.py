@@ -125,7 +125,7 @@ def main():
     elif command == 'manage':
         manage_blog(args)
     elif command == 'rebuild':
-        rebuild_blog()
+        rebuild_blog(args)
     else:
         print USAGE
         return
