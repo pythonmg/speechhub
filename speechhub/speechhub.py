@@ -36,10 +36,14 @@ def admin_blog(args):
                                              nargs=1,
                                              # default='%D/%M/%A - %h%m%s',
                                              help='Date and time format. Use capitalized for date and not capitalized for time.')
-    parser.add_argument('--update-path', metavar='posts-per-page.',
+    parser.add_argument('--path', metavar='Speechhub project path.',
                                              type=str,
                                              nargs=1,
                                              help='update the project path.')
+    parser.add_argument('--url', metavar='Your blog URL.',
+                                             type=str,
+                                             nargs=1,
+                                             help='update the blog URL.')
 
     parsed_args = parser.parse_args(args)
     admin(vars(parsed_args))
@@ -56,7 +60,7 @@ def create_new_blog(args):
                                        type=str, 
                                        nargs='?',
                                        help='Location where the blog will be created.',)
-    parser.add_argument('--blog-url', metavar='blog-url',
+    parser.add_argument('--url', metavar='blog-url',
                                        type=str, 
                                        nargs='?',
                                        help='The URL of your blog.',)

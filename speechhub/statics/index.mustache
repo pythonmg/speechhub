@@ -1,5 +1,6 @@
 <html>
   <head>
+    <link rel="stylesheet" href="{{url}}/static/css/basic_style.css" type="text/css" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>{{blog_name}}</title>
   </head>
@@ -31,19 +32,18 @@
       {{/posts}}
     </div>
 
-    <div id="bottom">  
-      <div id="pages">
-        {{{paginator}}}
-      </div>
-    </div>
-
     <div id="sidebar">
       <div id="about">
       </div>
       <div id="old-posts">
       </div>
     </div>
-    
+
+    <div id="bottom">  
+      <div id="pages">
+        {{{paginator}}}
+      </div>
+    </div>
 
   </body>
 </html>

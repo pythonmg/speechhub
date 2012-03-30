@@ -40,6 +40,7 @@ def create_blog_structure(blog_path,config_struct):
     os.makedirs(os.path.join(blog_path,'posts'))
     os.makedirs(os.path.join(blog_path,'static'))
     os.makedirs(os.path.join(blog_path,os.path.join('static','css')))
+    shutil.copy2(path.BASIC_CSS,os.path.join(blog_path,os.path.join('static','css')))
     os.makedirs(os.path.join(blog_path,'pages'))
     os.makedirs(os.path.join(blog_path,'config'))
     create_empty_index(blog_path,config_struct)
@@ -60,7 +61,7 @@ def create_empty_index(blog_path,config_struct):
 def get_initial_config_file(args):
     config_struct = json.load(open(path.INITIAL_CONFIG_FILE))
     config_struct['path'] = args['path']
-    config_struct['url'] = args['blog_url'][0] if args['blog_url'] else None
+    config_struct['url'] = args['url'][0] if args['url'] else None
     config_struct['blog_name'] = args['blog_name'][0] if args['blog_name'] else None
     config_struct['username'] = args['username'][0] if args['username'] else None
     config_struct['email'] = args['email'][0] if args['email'] else None
@@ -128,12 +129,13 @@ def create_index(config):
     
     posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_index]
 
-    paginator = create_paginator(0,len(config['published_posts']),config['posts_per_page'])
+    paginator = create_paginator(0,len(config['published_posts']),config['posts_per_page'],url=config['url'])
 
     page_content = {'posts':posts,
                     'blog_name':config['blog_name'],
                     # 'blog_description':config['blog_description'], #TODO!
                     'paginator':paginator,
+                    'url':config['url'],
                     }
 
     index_template = open(path.INDEX_TEMPLATE).read()
@@ -142,12 +144,12 @@ def create_index(config):
         index_file.write(unicode(index_content))
 
 
-def create_paginator(page,number_of_posts,posts_per_page):
+def create_paginator(page,number_of_posts,posts_per_page,url=''):
 
     last_page = int(math.ceil(float(number_of_posts) / posts_per_page))
     
     numbers = filter(lambda n : n >= 1, range(page-5,page+6))
-    content = {'pages':[{'number':n,'link':'/blog/pages/page%s.html' % n} for n in numbers if n > 1 and n <= last_page]}
+    content = {'pages':[{'number':n,'link':'%s/pages/page%s.html' % (url,n)} for n in numbers if n > 1 and n <= last_page]}
 
     if 1 in numbers:
         content['pages'].insert(0,{'number':1,'link':'/blog'})
@@ -187,12 +189,13 @@ def create_page(config,page_number):
     
     posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_page]
 
-    paginator = create_paginator(page_number,len(config['published_posts']),config['posts_per_page'])
+    paginator = create_paginator(page_number,len(config['published_posts']),config['posts_per_page'],url=config['url'])
 
     page_content = {'posts':posts,
                     'blog_name':config['blog_name'],
                     # 'blog_description':config['blog_description'], #TODO!
                     'paginator':paginator,
+                    'url':config['url'],
                     }
 
     template = open(path.INDEX_TEMPLATE).read()
@@ -264,8 +267,16 @@ def manage(args):
 
 
 def admin(args):
-    if args['update_path']:
-        update_path(args['update_path'][0])
+    if args['path']:
+        update_path(args['path'][0])
+    if args['url']:
+        update_url(args['url'][0])
+
+
+def update_url(url):
+    config = get_config()
+    config['url'] = url
+    update_config(config)
 
 
 def update_path(path):
