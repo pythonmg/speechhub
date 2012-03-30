@@ -138,9 +138,12 @@ def create_index(config):
 
     page_content = {'posts':posts,
                     'blog_name':config['blog_name'],
-                    # 'blog_description':config['blog_description'], #TODO!
+                    'blog_description':config['blog_description'], #TODO!
                     'paginator':paginator,
                     'url':url,
+                    'about_author':config['about_author'],
+                    'contacts':config['contacts'],
+                    'links':config['links']
                     }
 
     index_template = open(path.INDEX_TEMPLATE).read()
@@ -203,9 +206,12 @@ def create_page(config,page_number):
 
     page_content = {'posts':posts,
                     'blog_name':config['blog_name'],
-                    # 'blog_description':config['blog_description'], #TODO!
+                    'blog_description':config['blog_description'],
                     'paginator':paginator,
                     'url':url,
+                    'about_author':config['about_author'],
+                    'contacts':config['contacts'],
+                    'links':config['links']
                     }
 
     template = open(path.INDEX_TEMPLATE).read()

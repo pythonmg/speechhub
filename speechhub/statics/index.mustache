@@ -15,34 +15,59 @@
       </span>
     </div>
 
-    <div id="posts">
-      {{#posts}}
-        <div class="post">
-          <h2>{{title}}</h2>
-          <span class="author">
-            {{author}}
-          </span>
-          <span class="date">
-            {{date}}
-          </span> 
-          <span class="post-body">
-            {{{post}}}
-          </span>
+    <div id="content">
+
+      <div id="posts">
+        {{#posts}}
+          <div class="post">
+            <h1 class="post-title">{{title}}</h1>
+
+            <div class="meta">
+              <span class="author">
+                {{author}}
+              </span>
+              <span class="date">
+                {{date}}
+              </span> 
+            </div>
+            
+            <span class="postbody">
+              {{{post}}}
+            </span>
+          </div>
+        {{/posts}}
+
+        <div id="bottom">  
+          <div id="pages">
+            {{{paginator}}}
+          </div>
         </div>
-      {{/posts}}
-    </div>
 
-    <div id="sidebar">
-      <div id="about">
       </div>
-      <div id="old-posts">
-      </div>
-    </div>
 
-    <div id="bottom">  
-      <div id="pages">
-        {{{paginator}}}
+      <div id="sidebar">
+        <div id="about">
+          <h3>About</h3>
+          {{about_author}}
+        </div>
+        <div id="contact">
+          <h3>Contact</h3>
+          {{#contacts}}
+            {{title}}: {{contact}}<br/>
+          {{/contacts}}
+        </div>
+        <div id="old-posts">
+          <h3>Old Posts</h3>
+          blah
+        </div>
+        <div id="links">
+          <h3>Links</h3>
+          {{#links}}
+            <a href="{{url}}">{{text}}</a><br/>
+          {{/links}}
+        </div>
       </div>
+
     </div>
 
   </body>
