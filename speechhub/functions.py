@@ -42,6 +42,7 @@ def create_blog_structure(blog_path,config_struct):
     os.makedirs(os.path.join(blog_path,os.path.join('static','css')))
     shutil.copy2(path.BASIC_CSS,os.path.join(blog_path,os.path.join('static','css')))
     os.makedirs(os.path.join(blog_path,'pages'))
+    os.makedirs(os.path.join(blog_path,os.path.join('pages','permalinks')))
     os.makedirs(os.path.join(blog_path,'config'))
     create_empty_index(blog_path,config_struct)
 
@@ -145,6 +146,7 @@ def create_index(config):
                     'contacts':config['contacts'],
                     'links':config['links'],
                     'css_file':config['css_file'],
+                    'old_posts':get_permalinks_list(config),
                     }
 
     index_template = open(path.INDEX_TEMPLATE).read()
@@ -176,7 +178,7 @@ def get_published_posts(posts_path):
         if f.endswith('.meta.json'):
             meta = json.load(open(os.path.join(posts_path,f)))
             if meta['published']:
-                published_posts.append((meta['date'],meta['post_file_name']))
+                published_posts.append((meta['date'],meta['post_file_name'],meta['post_title']))
     
     published_posts.sort(key=lambda f : time.strptime(f[0]),reverse=True)
 
@@ -214,6 +216,7 @@ def create_page(config,page_number):
                     'contacts':config['contacts'],
                     'links':config['links'],
                     'css_file':config['css_file'],
+                    'old_posts':get_permalinks_list(config),
                     }
 
     template = open(path.INDEX_TEMPLATE).read()
@@ -238,9 +241,56 @@ def rebuild_blog(args):
     published_posts = get_published_posts(posts_path)
     config['published_posts'] = published_posts
 
+    create_permalinks(config)
     create_index(config)
     create_pages(config)
 
+
+def create_permalinks(config):
+    for post in config['published_posts']:
+        page_content = create_post_page(config,post[1])
+        post_name = post[1][:-3] + '.html'
+        with codecs.open(os.path.join(config['path'],'pages%spermalinks%s%s' % (FOLDER_SEPARATOR,FOLDER_SEPARATOR,post_name)),'w',encoding='utf-8') as page:
+            page.write(unicode(page_content))
+
+
+def get_permalinks_list(config):
+    
+    if config['debug']:
+        url = config['path']
+    else:
+        url = config['url']
+
+    base_url = url + '/pages/permalinks/'
+    # import pdb; pdb.set_trace()
+    return [{'url':base_url+post[1][:-3]+'.html','title':post[2]} for post in config['published_posts'][:10]]
+
+
+def create_post_page(config,post_file_name):
+    project_path = config['path']
+    posts_folder = os.path.join(project_path,'posts')
+    
+    post = [parse_post(os.path.join(posts_folder,post_file_name))]
+
+    if config['debug']:
+        url = config['path']
+    else:
+        url = config['url']
+
+    page_content = {'posts':post,
+                    'blog_name':config['blog_name'],
+                    'blog_description':config['blog_description'],
+                    'url':url,
+                    'about_author':config['about_author'],
+                    'contacts':config['contacts'],
+                    'links':config['links'],
+                    'css_file':config['css_file'],
+                    'old_posts':get_permalinks_list(config),
+                    }
+
+    template = open(path.INDEX_TEMPLATE).read()
+    return pystache.render(template,page_content)
+    
 
 def publish_post(path):
 

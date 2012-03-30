@@ -58,7 +58,9 @@
         </div>
         <div id="old-posts">
           <h3>Old Posts</h3>
-          blah
+          {{#old_posts}}
+            <a href="{{url}}">{{title}}</a><br/>
+          {{/old_posts}}
         </div>
         <div id="links">
           <h3>Links</h3>
