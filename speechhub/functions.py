@@ -262,8 +262,7 @@ def get_permalinks_list(config):
         url = config['url']
 
     base_url = url + '/pages/permalinks/'
-    # import pdb; pdb.set_trace()
-    return [{'url':base_url+post[1][:-3]+'.html','title':post[2]} for post in config['published_posts'][:10]]
+    return [{'url':base_url+post[1][:-3]+'.html','title':post[2]} for post in config['published_posts']]
 
 
 def create_post_page(config,post_file_name):
