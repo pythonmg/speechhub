@@ -79,7 +79,7 @@ def create_new_blog(args):
 
 def create_new_post(args):
     parser = argparse.ArgumentParser(description='Speechhub is a simple command line static blog engine.')
-    parser.add_argument('--post-title', metavar='title',
+    parser.add_argument('--title', metavar='title',
                                        type=str,
                                        required=True, 
                                        nargs=1,

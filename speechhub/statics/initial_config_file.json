@@ -11,5 +11,9 @@
     "contacts":[], 
     "about_author":"",
     "links":[],
-    "css_file":"basic_style.css"
+    "css_file":"basic_style.css",
+    "disqus":{"enabled":false,
+              "shortname":"",
+              "disqus_identifier":"",
+              "disqus_url":""}
 }

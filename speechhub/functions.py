@@ -70,7 +70,7 @@ def get_initial_config_file(args):
 
 
 def new_post(args):
-    post_title = args['post_title'][0].decode('utf-8')
+    post_title = args['title'][0].decode('utf-8')
 
     LOCAL_PATH = os.getcwd()
 
@@ -226,7 +226,7 @@ def create_page(config,page_number):
         page.write(unicode(content))
 
 
-def rebuild_blog(args):
+def rebuild_blog(args={}):
 
     if args:
         if 'debug' in args or '--debug' in args:
@@ -276,6 +276,16 @@ def create_post_page(config,post_file_name):
     else:
         url = config['url']
 
+    if config['disqus']['enabled']:
+        disqus_template = open(path.DISQUS_TEMPLATE).read()
+        disqus_variables = config['disqus']
+        disqus_variables.update({'disqus_url':url + '/pages/permalinks/' + post_file_name[:-3] + '.html',
+                                 'disqus_identifier':post_file_name[:-3]})
+        disqus = pystache.render(disqus_template,disqus_variables)
+        disqus = unicode(disqus)
+    else:
+        disqus = ''
+
     page_content = {'posts':post,
                     'blog_name':config['blog_name'],
                     'blog_description':config['blog_description'],
@@ -285,6 +295,7 @@ def create_post_page(config,post_file_name):
                     'links':config['links'],
                     'css_file':config['css_file'],
                     'old_posts':get_permalinks_list(config),
+                    'disqus':disqus,
                     }
 
     template = open(path.INDEX_TEMPLATE).read()
@@ -345,8 +356,6 @@ def admin(args):
         update_path(args['path'][0])
     if args['url']:
         update_url(args['url'][0])
-    if args['debug']:
-        set_debug(args['debug'][0])
 
 
 def update_url(url):
