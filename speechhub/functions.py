@@ -101,13 +101,12 @@ def new_post(args):
     print u"Post '%s' created. To fill it with something brillant please edit the file '%s'" % (post_title,post_file_name)
 
 
-def parse_post(post_file_name):
+def parse_post(config,post_file_name):
 
     meta_file_name = '.'.join(post_file_name.split('.')[:-1]) + '.meta.json'
 
-    post = codecs.open(post_file_name,'r',encoding='utf-8')#.read()
+    post = codecs.open(post_file_name,'r',encoding='utf-8')
     meta_content = json.load(open(meta_file_name))
-    
     post_content = unicode(post.read())
     parsed_post = markdown(post_content)
 
@@ -115,6 +114,8 @@ def parse_post(post_file_name):
             'post':parsed_post,
             'author':meta_content['post_author'],
             'title':meta_content['post_title'],
+            'relative_permalink':'pages/permalinks/'+meta_content['post_file_name'][:-3]+'.html',
+            'url':config['url'],
             }
 
 
@@ -128,7 +129,7 @@ def create_index(config):
     posts_folder = os.path.join(config['path'],'posts')
     posts_at_index = get_posts_for_page(config['published_posts'],posts_per_page=config['posts_per_page'])
     
-    posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_index]
+    posts = [parse_post(config,os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_index]
 
     if config['debug']:
         url = config['path']
@@ -198,7 +199,7 @@ def create_page(config,page_number):
     posts_folder = os.path.join(config['path'],'posts')
     posts_at_page = get_posts_for_page(config['published_posts'],posts_per_page=config['posts_per_page'],page=page_number)
     
-    posts = [parse_post(os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_page]
+    posts = [parse_post(config,os.path.join(posts_folder,post_file_name)) for post_file_name in posts_at_page]
 
     if config['debug']:
         url = config['path']
@@ -269,7 +270,7 @@ def create_post_page(config,post_file_name):
     project_path = config['path']
     posts_folder = os.path.join(project_path,'posts')
     
-    post = [parse_post(os.path.join(posts_folder,post_file_name))]
+    post = [parse_post(config,os.path.join(posts_folder,post_file_name))]
 
     if config['debug']:
         url = config['path']

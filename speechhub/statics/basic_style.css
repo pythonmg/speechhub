@@ -1,11 +1,18 @@
-body         { font-family: 'Georgia', serif; font-size: 17px; color: #000; 
-}
+
+body         { font-family: 'Georgia', serif; font-size: 17px; color: #000;} 
 
 a            { color: #004B6B; 
            text-decoration:none;}
 a:hover      { color: #6D4100; }
 
 img { max-width:640px; }
+
+.blog-title a{
+
+ font-family: 'Georgia', serif; color: #000;} 
+
+.post-title a{
+ font-family: 'Georgia', serif; color: #000;} 
 
 #sidebar {
     border-left: 1px solid #999999;

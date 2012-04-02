@@ -8,7 +8,7 @@
     
     <div id="top">
       <h1 class="blog-title">
-        {{blog_name}}
+        <a href="{{url}}/index.html">{{blog_name}}</a>
       </h1>
       <span class="blog-description">
         {{blog_description}}
@@ -20,7 +20,7 @@
       <div id="posts">
         {{#posts}}
           <div class="post">
-            <h1 class="post-title">{{title}}</h1>
+            <h1 class="post-title"><a href="{{ur}}{{relative_permalink}}">{{title}}</a></h1>
 
             <div class="meta">
               <span class="author">

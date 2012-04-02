@@ -13,7 +13,6 @@
     "links":[],
     "css_file":"basic_style.css",
     "disqus":{"enabled":false,
-              "shortname":"",
-              "disqus_identifier":"",
-              "disqus_url":""}
+              "shortname":""
+             }
 }
