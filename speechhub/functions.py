@@ -110,12 +110,17 @@ def parse_post(config,post_file_name):
     post_content = unicode(post.read())
     parsed_post = markdown(post_content)
 
+    if config['debug']:
+        url = config['path']
+    else:
+        url = config['url']
+
     return {'date':meta_content['date'],
             'post':parsed_post,
             'author':meta_content['post_author'],
             'title':meta_content['post_title'],
             'relative_permalink':'pages/permalinks/'+meta_content['post_file_name'][:-3]+'.html',
-            'url':config['url'],
+            'url':url,
             }
 
 
@@ -286,7 +291,6 @@ def create_post_page(config,post_file_name):
         disqus = unicode(disqus)
     else:
         disqus = ''
-
     page_content = {'posts':post,
                     'blog_name':config['blog_name'],
                     'blog_description':config['blog_description'],
