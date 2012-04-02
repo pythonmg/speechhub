@@ -25,7 +25,7 @@ setup(name='SpeechHub',
       author_email='alvesjunior.antonio@gmail.com',
       url='alvesjnr.github.com',
 	    install_requires=['argparse','pystache','markdown','Unidecode'],
-      packages=['speechhub'],
+      packages=['speechhub','speechhub.statics'],
       entry_points = {
         'console_scripts': [
             'speechhub = speechhub.speechhub:main',
