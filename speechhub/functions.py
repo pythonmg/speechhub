@@ -133,7 +133,7 @@ def parse_post(config,post_file_name):
     else:
         url = config['url']
 
-    return {'date':meta_content['date'],
+    return {'date':time.strftime(config['datetime-format'], time.strptime(meta_content['date'], "%a %b %d %H:%M:%S %Y")),
             'post':parsed_post,
             'author':meta_content['post_author'],
             'title':meta_content['post_title'],
