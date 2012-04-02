@@ -30,5 +30,9 @@ setup(name='SpeechHub',
         'console_scripts': [
             'speechhub = speechhub.speechhub:main',
         ],
-    }
+      },
+      include_package_data = True,
+      package_data = {
+        '': ['*.json','*.mustache','*.css','*.js'],
+      }
      )
