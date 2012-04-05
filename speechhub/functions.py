@@ -58,15 +58,19 @@ def create_blog_structure(blog_path,config_struct):
     os.makedirs(os.path.join(blog_path,'posts'))
     os.makedirs(os.path.join(blog_path,'static'))
     os.makedirs(os.path.join(blog_path,os.path.join('static','css')))
-    shutil.copy2(path.BASIC_CSS,os.path.join(blog_path,os.path.join('static','css')))
     os.makedirs(os.path.join(blog_path,'pages'))
     os.makedirs(os.path.join(blog_path,os.path.join('pages','permalinks')))
     os.makedirs(os.path.join(blog_path,'config'))
+    copy_static_files(blog_path)
     create_empty_index(blog_path,config_struct)
 
     with open(os.path.join(os.path.join(blog_path,'config'),'config.json'),'w') as config_file:
         json.dump(config_struct,config_file)
 
+def copy_static_files(blog_path):
+    shutil.copy2(path.RAINBOW_JS,os.path.join(blog_path,'static'))
+    shutil.copy2(path.BASIC_CSS,os.path.join(blog_path,os.path.join('static','css')))
+    shutil.copy2(path.RAINBOW_GITHUB_THEME,os.path.join(blog_path,os.path.join('static','css')))
 
 def create_empty_index(blog_path,config_struct):
 
@@ -260,7 +264,7 @@ def rebuild_blog(args={}):
         set_debug(False)
 
     config = get_config()
-
+    copy_static_files(config['path'])
     posts_path = os.path.join(config['path'],'posts')
     published_posts = get_published_posts(posts_path)
     config['published_posts'] = published_posts

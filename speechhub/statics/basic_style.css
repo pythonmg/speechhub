@@ -89,7 +89,7 @@ img { max-width:640px; }
     margin-bottom: 0.5em;
 }
 
-.meta {
+.meta-author {
     background-color: #333333;
     color: #EEEEEE;
     font-family: Arial,Helvetica,sans-serif;
@@ -97,12 +97,12 @@ img { max-width:640px; }
     /*margin: 0 0 10px;*/
     padding: 4px 6px;
 }
-.meta a {
+.meta-author a {
     color: #EEEEEE;
     font-weight: bold;
     text-decoration: none;
 }
-.meta a:hover {
+.meta-author a:hover {
     color: #FFFFFF;
     text-decoration: none;
 }
