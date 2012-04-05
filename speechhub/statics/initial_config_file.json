@@ -14,5 +14,6 @@
     "css_file":"basic_style.css",
     "disqus":{"enabled":false,
               "shortname":""
-             }
+             },
+    "footage_content":""
 }

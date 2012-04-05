@@ -175,6 +175,7 @@ def create_index(config):
                     'links':config['links'],
                     'css_file':config['css_file'],
                     'old_posts':get_permalinks_list(config),
+                    'footage_content':config['footage_content'],
                     }
 
     index_template = open(path.INDEX_TEMPLATE).read()
@@ -245,6 +246,7 @@ def create_page(config,page_number):
                     'links':config['links'],
                     'css_file':config['css_file'],
                     'old_posts':get_permalinks_list(config),
+                    'footage_content':config['footage_content'],
                     }
 
     template = open(path.INDEX_TEMPLATE).read()
@@ -323,6 +325,7 @@ def create_post_page(config,post_file_name):
                     'css_file':config['css_file'],
                     'old_posts':get_permalinks_list(config),
                     'disqus':disqus,
+                    'footage_content':config['footage_content'],
                     }
 
     template = open(path.INDEX_TEMPLATE).read()
